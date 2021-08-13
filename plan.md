@@ -2,7 +2,7 @@
 
 - Initialize our NodeJs project - DONE
 - Initialize our first view - DONE
-- Create a room id
+- Create a room id - DONE
 - Add the ability to view our own Video
 - Add ability to allow others to stream their Video
 - Add styling
@@ -60,3 +60,17 @@
       res.render('room');
     })
   - run server and view in browser, should see message from room.ejs
+- Create a room id
+  - install uuid in terminal, will create random id's
+    - npm install uuid
+  - import the v4 version of uuid
+    - const { v4: uuidv4 } = require('uuid');
+  - create a new url with room params
+    app.get('/:room', (req, res) =>{
+      res.render('room', { roomId: req.params.room})
+    })
+  - update our initial route to redirect with url id to room route
+    app.get('/', (req, res) => {
+      res.redirect(`/${uuidv4()}`);
+    })
+  - Save, refresh browser, notice the change in url to include id
