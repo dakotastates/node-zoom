@@ -8,6 +8,9 @@ const { v4: uuidv4 } = require('uuid');
 // set ejs
 app.set('view engine', 'ejs');
 
+// tell server where public files are
+app.use(express.static('public'));
+
 // app.get asks what url we are going to hit
 app.get('/', (req, res) => {
   res.redirect(`/${uuidv4()}`);

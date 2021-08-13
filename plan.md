@@ -74,3 +74,58 @@
       res.redirect(`/${uuidv4()}`);
     })
   - Save, refresh browser, notice the change in url to include id
+
+- Create a public folder and create a script.js file within public
+  - import script.js inside room.ejs
+    - <script src="script.js"></script>
+  - In server.js tell server where public folder is
+    - app.use(express.static('public'));
+- To view own video
+  - In script.js use navigator.mediaDevices
+      let myVideoStream
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      }).then(stream =>{
+        myVideoStream = stream
+      })
+  - getUSerMedia returns a promise
+  - Create an addVideoStream function which plays the stream when loaded.
+    const addVideoStream = (video, stream) =>{
+      video.srcObject = stream;
+      // play video once data is loaded
+      video.addEventListener('loadedmetadata', () =>{
+        video.play();
+      })  
+    }
+  - create a video element
+    - const myVideo = document.createElement('video');
+  - mute our Video
+    - myVideo.muted = true;
+  - Inside the promise add the add video stream function and pass in the video element
+
+      let myVideoStream
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      }).then(stream =>{
+        // assign the response to a variable
+        myVideoStream = stream;
+        // pass in myVideo element and the stream
+        addVideoStream(myVideo, stream);
+      })
+  - In room.ejs add a video grid div
+    - <div id='video-grid'></div>
+  - In script.js capture video element by id
+    - const videoGrid = document.getElementById('video-grid');
+  - In the add video stream function append the video element by passing in the video
+    - videoGrid.append(video);
+      const addVideoStream = (video, stream) =>{
+        video.srcObject = stream;
+        video.addEventListener('loadedmetadata', () =>{
+          video.play();
+        })
+        videoGrid.append(video);
+      }
+    - Make sure script tags are at bottom of room.ejs body
+    - refresh, accept video, and webcam will be activated
