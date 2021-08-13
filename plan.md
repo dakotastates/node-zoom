@@ -1,7 +1,7 @@
 # Plan of Action
 
-- Initialize our NodeJs project
-- Initialize our first view
+- Initialize our NodeJs project - DONE
+- Initialize our first view - DONE
 - Create a room id
 - Add the ability to view our own Video
 - Add ability to allow others to stream their Video
@@ -37,3 +37,26 @@
   - Run server in terminal
     - nodemon server.js
 - Set rooms, create folder called views
+- Create a file called room.ejs inside views folder
+  - In room.ejs create basic html file
+    <!DOCTYPE html>
+    <html lang="en" dir="ltr">
+      <head>
+        <meta charset="utf-8">
+        <title>Zoom Clone</title>
+      </head>
+      <body>
+        Hellloooooo World!!!!!
+      </body>
+    </html>
+- To connect room.ejs to app -
+- Install ejs, which helps us get variables from backend to frontend
+  - npm install ejs
+- Go to server.js
+  - set the view engine
+    - app.set('view engine', 'ejs');
+  - Change our route to render
+    app.get('/', (req, res) => {
+      res.render('room');
+    })
+  - run server and view in browser, should see message from room.ejs
