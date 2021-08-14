@@ -12,7 +12,7 @@ var peer = new Peer(undefined, {
 let myVideoStream
 navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: false
+  audio: true
 }).then(stream =>{
   // assign the response to a variable
   myVideoStream = stream;
@@ -91,4 +91,35 @@ const scrollToBottom = () =>{
   let d = $('.main__chat_window');
   // scroll to the top
   d.scrollTop(d.prop('scrollHeight'))
+}
+
+// mute out Video
+const muteUnmute = () =>{
+  // get the current stream, get audio tracks, get enabled version of track
+  const enabled = myVideoStream.getAudioTracks()[0].enabled;
+  // if it's enabled we will disable it
+  if (enabled) {
+    myVideoStream.getAudioTracks()[0].enabled = false;
+    setUnmuteButton();
+  } else {
+    // if it's disabled we will enable it
+    setMuteButton();
+    myVideoStream.getAudioTracks()[0].enabled = true;
+  }
+}
+
+const setMuteButton = () => {
+  const html = `
+  <i class="fas fa-microphone"></i>
+  <span>Mute</span>
+  `
+  document.querySelector('.main__mute_button').innerHTML = html;
+}
+
+const setUnmuteButton = () =>{
+  const html = `
+  <i class="unmute fas fa-microphone-slash"></i>
+  <span>Unmute</span>
+  `
+  document.querySelector('.main__mute_button').innerHTML = html;
 }
