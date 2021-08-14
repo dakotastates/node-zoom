@@ -8,7 +8,7 @@
 - Add styling DONE
 - Add the ability to create messages DONE
 - Add mute button DONE
-- Add Stop Video Button DONE
+- Add Stop Video Button DONE w
 
 
 
