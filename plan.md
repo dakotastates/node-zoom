@@ -4,7 +4,7 @@
 - Initialize our first view - DONE
 - Create a room id - DONE
 - Add the ability to view our own Video DONE
-- Add ability to allow others to stream their Video
+- Add ability to allow others to stream their Video DONE
 - Add styling
 - Add the ability to create messages
 - Add mute button
@@ -237,12 +237,179 @@
 
         // listen on connection /  response from server
         socket.on('user-connected', (userId) =>{
-          connectToNewUser(userId);
+          connectToNewUser(userId, stream);
         })
 
-        const connectToNewUser = (userId) => {
+        const connectToNewUser = (userId, stream) => {
           // Listen on Peer Connection
           console.log(userId);
         }
 
-    - 
+  - Now use peer to connect the users - Call user
+    - call the user
+      - const call = peer.call(userId, stream)
+    - create new video element
+      - const video = document.createElement('video')
+    - add video to stream using the previouly created addVideoStream function
+        call.on('stream', userVideoStream =>{
+          // Use the add video stream and pass in the new users stream
+          addVideoStream(video, userVideoStream)
+        })
+    - move the user-connected on socket inside the promise so we can have access to the stream and pass it into the connectToNewUser function
+
+      let myVideoStream
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      }).then(stream =>{
+        // assign the response to a variable
+        myVideoStream = stream;
+        // pass in myVideo element and the stream
+        addVideoStream(myVideo, stream);
+
+        // listen on connection /  response from server
+        socket.on('user-connected', (userId) =>{
+          connectToNewUser(userId, stream);
+        })
+      })
+
+  - Answer the call inside the promise
+    peer.on('call', call =>{
+      // answer the Call
+      call.answer(stream)
+      const video = document.createElement('video')
+      // add the video stream for the user
+      call.on('stream', userVideoStream =>{
+        addVideoStream(video, userVideoStream)
+      })
+    })
+  - Refresh and add new user, will have two users streams shown
+
+- Style
+  - Import fontawesome to room.ejs
+    - <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
+  - Add nessessary divs for controls, chat, and video
+      <div class="main">
+        <div class="main__left">
+          <div class="main__videos">
+            <div id='video-grid'></div>
+          </div>
+          <div class="main__controls">
+            <div class="main__controls__block">
+              <div class="main__controls__button">
+                <i class="fas fa-microphone"></i>
+                <span>Mute</span>
+              </div>
+              <div class="main__controls__button">
+                <i class="fas fa-video"></i>
+                <span>Stop Video</span>
+              </div>
+            </div>
+
+            <div class="main__controls__block">
+              <div class="main__controls__button">
+                <i class="fas fa-shield-alt"></i>
+                <span>Security</span>
+              </div>
+              <div class="main__controls__button">
+                <i class="fas fa-user-friends"></i>
+                <span>Participants</span>
+              </div>
+              <div class="main__controls__button">
+                <i class="fas fa-comment-alt"></i>
+                <span>Chat</span>
+              </div>
+            </div>
+
+            <div class="main__controls__block">
+              <div class="main__controls__button">
+                <span class="leave_meeting">Leave Meeting</span>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="main__right">
+          <div class="main__header">
+            <h6>Chat</h6>
+          </div>
+        </div>
+      </div>
+  - main style and buttons in styles.css
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #video-grid{
+        display: flex;
+        justify-content: center;
+      }
+
+      video {
+        height: 300px;
+        width: 400px;
+        object-fit: cover;
+      }
+
+      .main {
+        height: 100vh;
+        display: flex;
+      }
+
+      .main__videos{
+        flex-grow: 1;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .main__left {
+        flex: 0.8;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main__right {
+        flex: 0.2;
+      }
+
+      .main__controls{
+        display: flex;
+        background-color: #1c1E20;
+        color: #D2D2D2;
+        padding: 5px;
+        justify-content: space-between;
+      }
+
+      .main__controls__block{
+        display: flex;
+
+      }
+
+      .main__controls__button{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 10px;
+        min-width: 80px;
+        cursor: pointer;
+      }
+
+      .main__controls__button i {
+        font-size: 24px;
+      }
+
+      .main__controls__button:hover {
+        background-color: #343434;
+        border-radius: 5px;
+      }
+
+      .leave_meeting{
+        color: #EB534B;
+      }
+
+  - Chat Design

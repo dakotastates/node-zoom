@@ -12,12 +12,22 @@ var peer = new Peer(undefined, {
 let myVideoStream
 navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: true
+  audio: false
 }).then(stream =>{
   // assign the response to a variable
   myVideoStream = stream;
   // pass in myVideo element and the stream
   addVideoStream(myVideo, stream);
+
+  peer.on('call', call =>{
+    // answer the Call
+    call.answer(stream)
+    const video = document.createElement('video')
+    // add the video stream for the user
+    call.on('stream', userVideoStream =>{
+      addVideoStream(video, userVideoStream)
+    })
+  })
 
   // listen on connection /  response from server
   socket.on('user-connected', (userId) =>{
