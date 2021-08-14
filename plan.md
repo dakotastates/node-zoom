@@ -3,7 +3,7 @@
 - Initialize our NodeJs project - DONE
 - Initialize our first view - DONE
 - Create a room id - DONE
-- Add the ability to view our own Video
+- Add the ability to view our own Video DONE
 - Add ability to allow others to stream their Video
 - Add styling
 - Add the ability to create messages
@@ -129,3 +129,120 @@
       }
     - Make sure script tags are at bottom of room.ejs body
     - refresh, accept video, and webcam will be activated
+- Add some styling to make video smaller
+  - create style.css file inside public folder
+  - import style.css inside room.ejs in header
+    - <link rel="stylesheet" href="style.css">
+  - In style.css center, display flex and adjust size of videoGrid
+      #video-grid{
+        display: flex;
+        justify-content: center;
+      }
+
+      video {
+        height: 300px;
+        width: 400px;
+        object-fit: cover;
+      }
+- WebSockets are for realtime communications
+  - install socket.io
+    - npm install socket.io
+  - import socket.io in server.js
+    - const io = require('socket.io')(server);
+  - create a connection and join room
+
+    io.on('connection', socket =>{
+      // join the room
+      socket.on('join-room', () =>{
+        console.log('joined room');
+      })
+    })
+  - In room.ejs import socket.js into head
+    - <script src='/socket.io/socket.io.js'></script>
+  - In script.js join the room
+    - socket.emit('join-room');
+  - In server.js import socket
+    - const socket = io('/')
+  - Refresh and check log, will tell us we've jointed the room
+- After connection we need to join the room
+  - Place roomId into a variable within room.erj head so we can have access to it.
+    <script>
+      const ROOM_ID = '<%= roomId %>'
+    </script>
+  - Update our join room emit socket in script.js to include ROOM_ID
+    - socket.emit('join-room', ROOM_ID);
+  - Update our socket connection in server.js to include the id by passing it through
+    io.on('connection', socket =>{
+      // join the room
+      socket.on('join-room', (roomId) =>{
+        // console.log('joined room');
+        // Join room from secific ID
+        socket.join(roomId);
+      })
+    })
+  - Tell socket we have the user connected
+    - socket.to(roomId).emit('user-connected');
+  - In script.js listen on the connection for new users
+      socket.on('user-connected', () =>{
+        connectToNewUser();
+      })
+  - create the connectToNewUser function - consoleLog for now
+      const connectToNewUser () =>{
+        console.log('new user')
+      }
+  - Save, refresh, copy link, go to another browser, check console.log, will have another user who has joined.
+  - Now we need to be able to identify the new user.
+  - Use peer to peer
+    - SIDE NOTE - What is Webrtc?
+      - Free and open source product that provides web browsers and mobile applications with real-time communication via simple applcation programming interfaces
+      - peerJS wraps the browser's WebRTC implemation to provide a complete, confingurable, and easy to use peer-to-peer connection to a remote peer.
+    - install peerJS
+      - npm install peer
+    - Run peerJS Server, import
+      - const { ExpressPeerServer } = require('peer');
+    - Connect to ExpressPeerServer
+        const peerServer = ExpressPeerServer(server, {
+          debug: true
+        })
+    - Specify the URL for the Peer server
+      - app.use('/peerjs', peerServer);
+    - In room.ejs, import peer
+      - <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+    -  Create new peer connection in scripts.js
+        var peer = new Peer(undefined, {
+          path: '/peerjs',
+          host: '/',
+          port: '3030'
+        });
+    - Listen on the Peer connection, wrap join-room socket with peer, pass in id
+      peer.on('open', id => {
+        // specific id for the person connecting auto created by peer
+        // let server know we've joined the room
+        socket.emit('join-room', ROOM_ID, id);
+      })
+    - Update socket connection to include userId and emit the id
+        io.on('connection', socket =>{
+          // join the room
+          socket.on('join-room', (roomId, userId) =>{
+            // userId comes from scripts.js peer connection
+            // console.log('joined room', roomId);
+            // Join room from secific ID
+            socket.join(roomId);
+            // broadcast the connection so it can be used on other streams
+            // pass in userId
+            socket.to(roomId).emit('user-connected', userId);
+          })
+        })
+    - update the socket.on response from server and pass the userId through all nesseary channels. Console log the id and join new user. ID should be in console.  
+
+        // listen on connection /  response from server
+        socket.on('user-connected', (userId) =>{
+          connectToNewUser(userId);
+        })
+
+        const connectToNewUser = (userId) => {
+          // Listen on Peer Connection
+          console.log(userId);
+        }
+
+    - 
