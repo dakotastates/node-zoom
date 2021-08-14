@@ -575,4 +575,14 @@
       document.querySelector('.main__video_button').innerHTML = html;
     }
 
--
+-DEPLOYMENT
+  - Deploy using Heroku
+  - install Heroku (globally)
+    - npm install -g heroku
+  - push to github
+    - git init
+  - Change Port in script to 343
+  - heroku create
+  - git push heroku master
+  - up date server port to
+    server.listen(process.env.PORT||3030);
