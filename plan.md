@@ -6,9 +6,9 @@
 - Add the ability to view our own Video DONE
 - Add ability to allow others to stream their Video DONE
 - Add styling DONE
-- Add the ability to create messages
-- Add mute button
-- Add Stop Video Button
+- Add the ability to create messages DONE
+- Add mute button DONE
+- Add Stop Video Button DONE
 
 
 
@@ -543,3 +543,36 @@
         document.querySelector('.main__mute_button').innerHTML = html;
       }
   - Change the html if the audio track is enabled.
+- Stop Video/Play Video toggle
+  - Very similar to the Mute
+
+    // Stop Video
+    const playStop = () =>{
+      // check if video is enabled
+      let enabled = myVideoStream.getVideoTracks()[0].enabled;
+      if (enabled) {
+        myVideoStream.getVideoTracks()[0].enabled = false;
+        setPlayVideo()
+      } else {
+        setStopVideo()
+        myVideoStream.getVideoTracks()[0].enabled = true;
+      }
+    }
+
+    const setStopVideo = () =>{
+      const html = `
+      <i class="fas fa-video"></i>
+      <span>Stop Video</span>
+      `
+      document.querySelector('.main__video_button').innerHTML = html;
+    }
+
+    const setPlayVideo = () =>{
+      const html = `
+      <i class="stop fas fa-video-slash"></i>
+      <span>Play Video</span>
+      `
+      document.querySelector('.main__video_button').innerHTML = html;
+    }
+
+-
