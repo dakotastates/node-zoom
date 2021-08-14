@@ -96,4 +96,10 @@ video {
 
 .main__chat_window{
   flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.messages {
+  color: white;
+  list-style: none;
 }

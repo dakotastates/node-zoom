@@ -37,6 +37,12 @@ io.on('connection', socket =>{
     // broadcast the connection so it can be used on other streams
     // pass in userId
     socket.to(roomId).emit('user-connected', userId);
+    // receive the messages
+    socket.on('message', message =>{
+      // send back to room
+      io.to(roomId).emit('createMessage', message)
+    })
+    
   })
 })
 

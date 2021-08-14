@@ -5,7 +5,7 @@
 - Create a room id - DONE
 - Add the ability to view our own Video DONE
 - Add ability to allow others to stream their Video DONE
-- Add styling
+- Add styling DONE
 - Add the ability to create messages
 - Add mute button
 - Add Stop Video Button
@@ -466,4 +466,51 @@
       }
 
 - Chat System
-  
+  - import jquery
+    -     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  - First get input value - script.js
+    - let text = $('input')
+  - Check if value of input is not empty
+      $('html').keydown((e) =>{
+        // have a condition where key 13 (enter) and check if not empty
+        if(e.which == 13 && text.val().length !== 0){
+          socket.emit('message', text.val());
+          text.val('')
+        }
+      })
+  - Socket.emit sends to server while socket.on receives from server
+  - with socket.emit('message', text.val()); we are sending the value of the input to the server
+  - Console.log the text and when enter is pressed it should log the e value
+  - In server.js we want to receive the message in the room
+      socket.on('message', message =>{
+        // send back to room
+        io.to(roomId).emit('createMessage', message)
+      })
+  - In the script.js we want to receive the message from the server
+  - receive message back from server
+    socket.on('createMessage', message =>{
+      console.log(message)
+    })
+  - in the create message socket we want to append the ul tag and add li and the message
+    -   $('ul').append(`<li class="message"><b>user</b><br/>${message}</li>`)
+  - add some message syling in the css
+    .messages {
+      color: white;
+      list-style: none;
+    }
+
+  - Now the messages will persist But if we keep typing we will run into border
+  - add a scrollToBottom() in the socket create message
+  - create the scrollToBottom() function
+    const scrollToBottom = () =>{
+      // caputure main chat window
+      let d = $('.main__chat_window');
+      // scroll to the top
+      d.scrollTop(d.prop('scrollHeight'))
+    }
+  - update our css main__chat_window
+    .main__chat_window{
+      flex-grow: 1;
+      overflow-y: scroll;
+    }
+  - 

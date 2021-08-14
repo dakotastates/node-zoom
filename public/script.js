@@ -62,3 +62,33 @@ const addVideoStream = (video, stream) =>{
   })
   videoGrid.append(video);
 }
+
+// use jquery previously imported with bootstrap
+let text = $('input')
+
+$('html').keydown((e) =>{
+  // have a condition where key 13 (enter) and check if not empty
+  if(e.which == 13 && text.val().length !== 0){
+    // console.log(text.val())
+    // send the value of the input to the server
+    socket.emit('message', text.val());
+    // after enter is pressed we clear the input
+    text.val('')
+  }
+})
+
+// recieve message back from server
+socket.on('createMessage', message =>{
+  // console.log(message)
+  // Show message in the chat
+  // append the ul and add a li and the message
+  $('ul').append(`<li class="message"><b>user</b><br/>${message}</li>`)
+  scrollToBottom()
+})
+
+const scrollToBottom = () =>{
+  // caputure main chat window
+  let d = $('.main__chat_window');
+  // scroll to the top
+  d.scrollTop(d.prop('scrollHeight'))
+}
