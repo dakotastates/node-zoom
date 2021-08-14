@@ -413,3 +413,57 @@
       }
 
   - Chat Design
+    - update main__right for chat features divs
+
+        <div class="main__right">
+          <div class="main__header">
+            <h6>Chat</h6>
+          </div>
+          <div class="main__chat_window">
+            <ul class="messages">
+
+            </ul>
+          </div>
+          <div class="main__message_container">
+            <input id="chat_message" type='text' placeholder="Type message here...">
+          </div>
+        </div>
+
+    - Link bootstrap stylesheet
+      - <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    - Link javascript from bootstrap
+      - <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+    - Chat CSS
+      .main__right {
+        flex: 0.2;
+        display: flex;
+        flex-direction: column;
+        background-color: #242324;
+        border-left: 1px solid #3D3D42;
+      }
+
+      .main__header{
+        color: #f5f5f5;
+        text-align: center;
+      }
+
+      .main__message_container{
+        padding: 22px 12px;
+        display: flex;
+      }
+
+      .main__message_container input{
+        flex-grow: 1;
+        background-color: transparent;
+        border: none;
+        color: #F5F5F5;
+      }
+
+      .main__chat_window{
+        flex-grow: 1;
+      }
+
+- Chat System
+  
